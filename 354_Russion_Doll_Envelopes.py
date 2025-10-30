@@ -17,20 +17,19 @@ Input: envelopes = [[1,1],[1,1],[1,1]]
 Output: 1
 """
 
+from bisect import bisect_left
+
 class Solution:
-    def maxEnvelopes(self, envelopes: List[List[int]]) -> int:
-        envelopes.sort(key = lambda x:(x[0],-x[1]))
-        dp = []
-        
-        for width, height in envelopes:
-            i, N = 0, len(dp)
-            while i < N:
-                if height <= dp[i]: break
-                i += 1
+    def maxEnvelopes(self, arr: List[List[int]]) -> int:
+        arr.sort(key=lambda x: (x[0], -x[1]))
 
-            if i == N:
-                dp.append(height)
-            else:
-                dp[i] = height
-
-        return len(dp)
+        def lis(nums):
+            dp = []
+            for i in range(len(nums)):
+                idx = bisect_left(dp, nums[i])
+                if idx == len(dp):
+                    dp.append(nums[i])
+                else:
+                    dp[idx] = nums[i]
+            return len(dp)
+        return lis([i[1] for i in arr])
